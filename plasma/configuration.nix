@@ -36,7 +36,7 @@
     description = "Create network directories";
     wantedBy = [ "multi-user.target" ];
     serviceConfig.ExecStart = ''
-      mkdir -p /home/querzion/network/{Downloads,Backups,ISOs,Archives,Users,VMs}
+      mkdir -p /home/querzion/network/{Downloads,Backups,ISOs,"The Archives",Users,VMs}
     '';
     install = {
       wantedBy = [ "multi-user.target" ];
@@ -70,8 +70,8 @@
       fsType = "smbfs";
       options = [ "credentials=/etc/systemd/system/creds/samba.secret" ];
     };
-    "/home/querzion/network/Archives" = {
-      device = "smb://192.168.0.3/Archives";
+    "/home/querzion/network/The Archives" = {
+      device = "smb://192.168.0.3/The Archives";
       fsType = "smbfs";
       options = [ "credentials=/etc/systemd/system/creds/samba.secret" ];
     };
@@ -134,7 +134,21 @@
     gamescope         # Game session manager
     gamemode          # Gaming performance manager
     mangohud          # Performance overlay
+
+    # Backup tool
+    timeshift         # System backup tool
+
+    # Firewall
+    firewalld         # Firewall service
   ];
+
+  # Configure Timeshift
+  services.timeshift = {
+    enable = true;
+    snapshotType = "RSYNC"; # Use RSYNC for snapshots
+    backupPath = "/home/querzion/network/Backups/NixOS"; # Updated backup path
+    includeHome = true;     # Include home directory
+  };
 
   # Fastfetch mockup output
   programs.fastfetch.enable = true;
